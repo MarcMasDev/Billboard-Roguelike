@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 901b5601925ed6240b0d6ff6fbf8a195, type: 3}
+  m_Name: DefaultDeck
+  m_EditorClassIdentifier: 
+  WhiteBall: {fileID: 8833314890990927101, guid: c0b6b442bc2206b4a9a51b121966fed7, type: 3}
+  BlackBall: {fileID: 8472579456060009668, guid: fa969ec0250a3b549b6f72c4acb031c6, type: 3}
+  balls:
+  - {fileID: 8472579456060009668, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
+  - {fileID: 8472579456060009668, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
+  - {fileID: 8472579456060009668, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
+  - {fileID: 8472579456060009668, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
+  - {fileID: 8472579456060009668, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
