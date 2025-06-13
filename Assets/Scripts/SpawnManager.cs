@@ -25,14 +25,11 @@ public class SpawnManager : MonoBehaviour
         {
             SpawnBall(ball);
         }
-        SpawnBall(PlayerInventory.PlayerDeck.BlackBall);
-        SpawnBall(PlayerInventory.PlayerDeck.WhiteBall);
     }
     public void SpawnBall(Ball ballPrefab)
     {
         //Fer el ordre aleatori
-        List<Transform> shuffled = new List<Transform>(spawnPoints);
-        shuffled.Sort((a, b) => Random.Range(-1, 2));
+        List<Transform> shuffled = Shuffle(new List<Transform>(spawnPoints));
 
         foreach (Transform point in shuffled)
         {
@@ -45,5 +42,21 @@ public class SpawnManager : MonoBehaviour
         }
 
         Debug.LogWarning("No free spawn point found");
+    }
+
+    //Randomiza una llista
+    List<T> Shuffle<T>(List<T> original)
+    {
+        List<T> copy = new List<T>(original);
+        List<T> result = new List<T>();
+
+        while (copy.Count > 0)
+        {
+            int index = Random.Range(0, copy.Count);
+            result.Add(copy[index]);
+            copy.RemoveAt(index);
+        }
+
+        return result;
     }
 }

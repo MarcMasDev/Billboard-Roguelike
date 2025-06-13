@@ -2,18 +2,13 @@ using UnityEngine;
 
 public static class DifficultySettings
 {
-    private static int racksPerRound = 3;
-    private static float startValue = 200;
-    private static float roundsMultiplier = 10;
-    private static float rackMultiplier = 2.5f;
-
-    public static int GetScoreToBeat()
+    public static int GetScoreToBeat(Difficulty settings)
     {
-        int roundIndex = PlayerInventory.currentRack / racksPerRound;
-        int withinRound = PlayerInventory.currentRack % racksPerRound;
+        int roundIndex = PlayerInventory.currentRack / settings.racksPerRound;
+        int withinRound = PlayerInventory.currentRack % settings.racksPerRound;
 
-        float blockValue = startValue * Mathf.Pow(roundsMultiplier, roundIndex);
-        float value = blockValue * Mathf.Pow(rackMultiplier, withinRound);
+        float blockValue = settings.startValue * Mathf.Pow(settings.roundsMultiplier, roundIndex);
+        float value = blockValue * Mathf.Pow(settings.rackMultiplier, withinRound);
 
         return Mathf.RoundToInt(value);
     }

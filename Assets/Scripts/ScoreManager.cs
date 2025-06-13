@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -10,6 +11,10 @@ public class ScoreManager : MonoBehaviour
 
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text scoreToBeatText;
+
+    [Header("Events")]
+    public UnityEvent onWin;
+    public UnityEvent onLose;
 
     private void Awake()
     {
@@ -33,8 +38,33 @@ public class ScoreManager : MonoBehaviour
     }
     private void SetScores()
     {
-        ScoreToBeat = DifficultySettings.GetScoreToBeat();
+        CurrentScore = 0;
+        ScoreToBeat = DifficultySettings.GetScoreToBeat(PlayerInventory.PlayerDeck.difficulty);
         scoreToBeatText.text = ScoreToBeat.ToString("N0");
         scoreText.text = CurrentScore.ToString("N0");
+    }
+
+    //Condicions de victoria i derrota
+    private void Update()
+    {
+        if (CurrentScore >= ScoreToBeat)
+        {
+            GoToNextRound();
+        }
+        else if (PlayerInventory.shots <= 0)
+        {
+            Loose();
+        }
+    }
+
+    private void GoToNextRound()
+    {
+        onWin?.Invoke();
+        PlayerInventory.NextRound();
+        SetScores();
+    }
+    private void Loose()
+    {
+        onLose?.Invoke();
     }
 }

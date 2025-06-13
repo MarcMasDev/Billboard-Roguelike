@@ -15,7 +15,7 @@ public class BallIdentifierUI : MonoBehaviour
         mainCam = Camera.main;
     }
 
-    //Evita tenir un munt de word canvases.
+    //Evita tenir un munt de world canvases.
     void Update()
     {
         if (!targetBall.gameObject.activeSelf)

@@ -32,7 +32,7 @@ public class Ball : MonoBehaviour
         while (distanceBuffer >= stats.distanceToScore)
         {
             score += stats.scoreDist;
-            ScoreDisplayer.Instance.ShowPopup(stats.scoreDist, transform.position, ScoreType.distance);
+            ScoreDisplayer.Instance.ShowPopup(stats.scoreDist, ScoreType.distance, transform);
             distanceBuffer -= stats.distanceToScore;
             ApplySpecialEffect(ScoreType.distance);
         }
@@ -45,9 +45,10 @@ public class Ball : MonoBehaviour
 
         int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
         score = newScore;
-        ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, transform.position, ScoreType.bounce);
+        ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
 
         ApplySpecialEffect(ScoreType.bounce, collision.gameObject);
+        AudioController.Instance.Play(SoundType.hit, true, transform);
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)

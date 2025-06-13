@@ -64,8 +64,10 @@ public class WhiteBall : Ball
         rb.AddForce(forceDir.normalized * forceMagnitude * power, ForceMode2D.Impulse);
 
         PlayerInventory.shots -= 1;
-        ScoreDisplayer.Instance.ShowPopup(-1, transform.position, ScoreType.hand);
+        ScoreDisplayer.Instance.ShowPopup(-1, ScoreType.hand);
         LineVisuals(rb.position, rb.position);
+
+        AudioController.Instance.Play(SoundType.hitBig, true, transform);
     }
     private void LineVisuals(Vector2 startPos, Vector2 endPos)
     {
@@ -82,14 +84,14 @@ public class WhiteBall : Ball
             if (ball != null)
             {
                 ball.AddScore(score);
-                ScoreDisplayer.Instance.ShowPopup(score, transform.position, ScoreType.specialEffect);
+                ScoreDisplayer.Instance.ShowPopup(score, ScoreType.specialEffect, transform);
                 ResetScore();
             }
             else
             {
                 int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
                 score = newScore;
-                ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, transform.position, ScoreType.bounce);
+                ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
             }
         }
     }
@@ -97,6 +99,7 @@ public class WhiteBall : Ball
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         ApplySpecialEffect(ScoreType.bounce, collision.gameObject);
+        AudioController.Instance.Play(SoundType.hit, true, transform);
     }
 
 

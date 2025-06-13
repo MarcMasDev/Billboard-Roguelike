@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public enum ScoreType
 {
@@ -87,25 +88,36 @@ public class Hole : MonoBehaviour
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         Ball ball = collision.GetComponent<Ball>();
-        bool diminish = ball.diminish;
-        int ballScore = ball.GetScore();
-        int finalScore = ballScore * stats.mult;
 
+        if (ball != null)
+        {
+            SetScore(ball);
+            SetCoins(ball);
+
+            ShowMultScoreVisuals();
+            AudioController.Instance.Play(SoundType.score, true, transform);
+        }
+
+    }
+    protected virtual void SetScore(Ball ball)
+    {
+            CountScore(ball.GetScore() * stats.mult);
+    }
+    protected virtual void SetCoins(Ball ball)
+    {
+        CountCoins(ball.diminish ? -stats.coins : stats.coins);
+    }
+    protected virtual void CountScore(int finalScore)
+    {
         ScoreManager.Instance.AddScore(finalScore);
-
-        ScoreDisplayer.Instance.ShowPopup(ballScore, transform.position, ScoreType.scored);
-        ScoreDisplayer.Instance.ShowPopup(stats.mult, transform.position, ScoreType.scoredMult);
-        ScoreDisplayer.Instance.ShowPopup(finalScore, transform.position, ScoreType.final);
-
-        if (diminish)
-        {
-            PlayerInventory.Coins -= stats.coins;
-            ScoreDisplayer.Instance.ShowPopup(-stats.coins, transform.position, ScoreType.coin);
-        }
-        else
-        {
-            PlayerInventory.Coins += stats.coins;
-            ScoreDisplayer.Instance.ShowPopup(stats.coins, transform.position, ScoreType.coin);
-        }
+        ScoreDisplayer.Instance.ShowPopup(finalScore, ScoreType.final);
+    }
+    protected virtual void CountCoins(int coins)
+    {
+        ScoreDisplayer.Instance.ShowPopup(coins, ScoreType.coin);
+    }
+    private void ShowMultScoreVisuals()
+    {
+        ScoreDisplayer.Instance.ShowPopup(stats.mult, ScoreType.scoredMult, transform);
     }
 }

@@ -16,17 +16,26 @@ public class ScorePopUp : MonoBehaviour
     [SerializeField] private Animator coin;
     [SerializeField] private Animator scoreText;
     [SerializeField] private float offsetRange = 30f;
-
+    [HideInInspector] public bool IsInUse = false;
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         cam = Camera.main;
     }
 
-    public void Play(float amount, Vector2 worldPosition, ScoreType t, float speed)
+    public void Play(float amount, Transform worldTransform, ScoreType t, float speed)
     {
-        Vector2 screenPos = cam.WorldToScreenPoint(worldPosition);
+        IsInUse = true;
 
+        Vector2 screenPos;
+        if (worldTransform == null)
+        {
+            screenPos = rectTransform.position;
+        }
+        else
+        {
+            screenPos = cam.WorldToScreenPoint(worldTransform.position);
+        }
 
         //Petit offset per evitar overlaps de score
         Vector2 randomOffset = new Vector2(

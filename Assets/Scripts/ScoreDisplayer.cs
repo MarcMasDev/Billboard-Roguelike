@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public enum ScorePlace
 {
@@ -24,74 +25,92 @@ public class PoolParents
     public RectTransform popupParent;
     [HideInInspector] public Queue<ScorePopUp> pool = new Queue<ScorePopUp>();
 }
+
 public class ScoreDisplayer : MonoBehaviour
 {
     public static ScoreDisplayer Instance;
 
     [SerializeField] private ScorePopUp popupPrefab;
-
     [SerializeField] private int poolSize = 20;
     [SerializeField] private float destroyTime = 0.5f;
     [SerializeField] private ScoringType[] scorePlacings;
-
     [SerializeField] private PoolParents[] poolParents;
+
+    private Dictionary<ScorePlace, PoolParents> poolLookup;
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
 
-        for (int i = 0; i < poolParents.Length; i++)
+        poolLookup = new Dictionary<ScorePlace, PoolParents>();
+        foreach (var poolParent in poolParents)
         {
-            FillQueue(poolParents[i].pool, poolParents[i].popupParent);
+            poolLookup[poolParent.scorePlace] = poolParent;
+            FillQueue(poolParent);
         }
     }
 
-    private void FillQueue(Queue<ScorePopUp> queue, RectTransform parent)
+    private void FillQueue(PoolParents poolParent)
     {
         for (int i = 0; i < poolSize; i++)
         {
-            ScorePopUp popup = Instantiate(popupPrefab, parent);
+            ScorePopUp popup = Instantiate(popupPrefab, poolParent.popupParent);
             popup.gameObject.SetActive(false);
-            queue.Enqueue(popup);
+            poolParent.pool.Enqueue(popup);
         }
     }
-    public void ShowPopup(float scoreAmount, Vector2 worldPosition, ScoreType t)
+
+    public void ShowPopup(float scoreAmount, ScoreType scoreType, Transform worldPosition = null)
     {
-        ScorePopUp popup;
+        ScoringType scoringType = GetPlacing(scoreType);
+        if (!poolLookup.TryGetValue(scoringType.place, out PoolParents poolParent))
+        {
+            Debug.LogError($"No pool parent found for ScorePlace: {scoringType.place}");
+            return;
+        }
 
-        ScoringType scorePlace = GetPlacing(t);
-        PoolParents poolParent = GetPoolParent(scorePlace.place);
-
-        if (poolParent.pool.Count > 0) popup = poolParent.pool.Dequeue();
-        else popup = Instantiate(popupPrefab, poolParent.popupParent);
-
+        ScorePopUp popup = GetPopupFromPool(poolParent);
         popup.gameObject.SetActive(true);
-        popup.Play(scoreAmount, worldPosition, t, scorePlace.appearanceSpeed);
-        StartCoroutine(ReturnToPoolAfter(popup, destroyTime, scorePlace.place, poolParent));
+        popup.Play(scoreAmount, worldPosition, scoreType, scoringType.appearanceSpeed);
+        StartCoroutine(ReturnToPoolAfter(popup, destroyTime, poolParent));
     }
 
-    private System.Collections.IEnumerator ReturnToPoolAfter(ScorePopUp popup, float delay, ScorePlace returnToPlace, PoolParents p)
+    private ScorePopUp GetPopupFromPool(PoolParents poolParent)
+    {
+        if (poolParent.pool.Count > 0)
+        {
+            return poolParent.pool.Dequeue();
+        }
+
+        //Crea una instancia nova si el pool està buit
+        ScorePopUp newPopup = Instantiate(popupPrefab, poolParent.popupParent);
+        return newPopup;
+    }
+
+    private IEnumerator ReturnToPoolAfter(ScorePopUp popup, float delay, PoolParents poolParent)
     {
         yield return new WaitForSeconds(delay);
-        popup.gameObject.SetActive(false);
-        p.pool.Enqueue(popup);
+
+        if (popup != null)
+        {
+            popup.gameObject.SetActive(false);
+            poolParent.pool.Enqueue(popup);
+        }
     }
 
     private ScoringType GetPlacing(ScoreType t)
     {
-        for (int i = 0; i < scorePlacings.Length; i++)
+        foreach (var placing in scorePlacings)
         {
-            if (t == scorePlacings[i].scoreType) return scorePlacings[i];
+            if (placing.scoreType == t) return placing;
         }
-        return scorePlacings[0];
-    }
 
-    private PoolParents GetPoolParent(ScorePlace t)
-    {
-        for (int i = 0; i < poolParents.Length; i++)
-        {
-            if (poolParents[i].scorePlace == t) return poolParents[i];
-        }
-        return poolParents[0];
+        Debug.LogWarning($"No scoring type found for {t}, using default");
+        return scorePlacings[0];
     }
 }
