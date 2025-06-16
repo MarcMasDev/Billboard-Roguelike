@@ -4,8 +4,6 @@ using System.Collections.Generic;
 public class BallManager : MonoBehaviour
 {
     public static BallManager Instance { get; private set; }
-
-    public List<Ball> BallTemplates { get; private set; } = new List<Ball>(); //todas con las que se van a jugar
     public List<Ball> PlayingBalls { get; private set; } = new List<Ball>(); //solo las instanciadas
 
     [SerializeField] private Deck defaultDeck; //Inicializar en caso de que no haya una deck asignada.
@@ -17,7 +15,7 @@ public class BallManager : MonoBehaviour
 
         for (int i = 0; i < defaultDeck.balls.Length; i++)
         {
-            BallTemplates.Add(defaultDeck.balls[i]);
+            PlayingBalls.Add(defaultDeck.balls[i]);
         }
 
         if (PlayerInventory.PlayerDeck == null) PlayerInventory.PlayerDeck = defaultDeck;
@@ -31,8 +29,8 @@ public class BallManager : MonoBehaviour
     }
     public void UnregisterBall(Ball ball)
     {
-        if (BallTemplates.Contains(ball)) BallTemplates.Remove(ball);
         if (PlayingBalls.Contains(ball)) PlayingBalls.Remove(ball);
+        Destroy(ball);
     }
 
     public bool AllBallsStopped()
@@ -46,11 +44,12 @@ public class BallManager : MonoBehaviour
         }
         return true;
     }
-    private void ResetAllScore()
+    
+    public void ApplyOnShotEffects()
     {
-        foreach (Ball ball in BallTemplates)
+        foreach (Ball ball in PlayingBalls)
         {
-            ball.ResetScore();
+            ball.OnShoot();
         }
     }
 

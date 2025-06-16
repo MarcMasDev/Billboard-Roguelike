@@ -22,7 +22,7 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnDeckBalls()
     {
-        for (int i = 0; i < BallManager.Instance.BallTemplates.Count; i++)
+        for (int i = 0; i < BallManager.Instance.PlayingBalls.Count; i++)
         {
             if (i < BallManager.Instance.PlayingBalls.Count)
             {
@@ -30,7 +30,7 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                CreateBall(BallManager.Instance.BallTemplates[i]);
+                CreateBall(BallManager.Instance.PlayingBalls[i]);
             }
         }
     }
@@ -39,31 +39,26 @@ public class SpawnManager : MonoBehaviour
     {
         ball.gameObject.SetActive(true);
         ball.transform.position = GetSpawnPoint();
-
-        ball.PutBallToTable();
     }
 
     public void OverrideBall(Ball bToOverride, Ball bToSpawn)
     {
-        BallManager.Instance.UnregisterBall(bToOverride);
+        //BallManager.Instance.UnregisterBall(bToOverride);
 
-        //Ens guardem la world scale del item en world UI
-        Vector3 worldScale = bToSpawn.transform.localScale;
+        ////Ens guardem la world scale del item en world UI
+        //Vector3 worldScale = bToSpawn.transform.localScale;
 
-        bToSpawn.enabled = true;
-        bToSpawn.transform.SetParent(null);
-        bToSpawn.transform.position = bToOverride.transform.position;
-        bToSpawn.transform.localScale = worldScale;
+        //bToSpawn.enabled = true;
+        //bToSpawn.transform.SetParent(null);
+        //bToSpawn.transform.position = bToOverride.transform.position;
+        //bToSpawn.transform.localScale = worldScale;
 
-        bToSpawn.PutBallToTable();
-        Destroy(bToOverride.gameObject);
+        //Destroy(bToOverride.gameObject);
     }
 
     private void CreateBall(Ball ballPrefab)
     {
-        Ball b = Instantiate(ballPrefab, GetSpawnPoint(), Quaternion.identity).GetComponent<Ball>();
-        b.enabled = true;
-        b.PutBallToTable();
+        Instantiate(ballPrefab, GetSpawnPoint(), Quaternion.identity);
     }
 
     public Vector2 GetSpawnPoint()

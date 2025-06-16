@@ -58,7 +58,7 @@ MonoBehaviour:
   text: {fileID: 1585430770778657096}
   mult: {fileID: 2403227801347024922}
   sum: {fileID: 8697382564578679335}
-  specialEffect: {fileID: 5566655073494894929}
+  passScore: {fileID: 5566655073494894929}
   score: {fileID: 3788962361197995190}
   scoreDimished: {fileID: 8374375934459146115}
   coin: {fileID: 1149027985245070713}
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.49019608}
+  m_Color: {r: 0.86666673, g: 0.8117648, b: 0.6, a: 0.49019608}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 5566655073494894929}
   - component: {fileID: 5937192850525469089}
   m_Layer: 5
-  m_Name: SpecialEffectPopUp
+  m_Name: PassScoreEffectPopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -866,7 +866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
+  m_Color: {r: 0.86666673, g: 0.8117648, b: 0.6, a: 0.8}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -126,11 +126,17 @@ public class WhiteBall : Ball
         float powerMultiplier = powerCurve.Evaluate(normalizedDistance);
 
         rb.AddForce(forceDir.normalized * powerMultiplier * power, ForceMode2D.Impulse);
+
+        DecreaseShot();
+    }
+    private void DecreaseShot()
+    {
         PlayerInventory.shots -= 1;
-        ScoreDisplayer.Instance.ShowPopup(-1, ScoreType.hand);
+
+        BallManager.Instance.ApplyOnShotEffects();
+        ScoreDisplayer.Instance.ShowPopup(-1, ScoreType.shot);
         AudioController.Instance.Play(SoundType.hitBig, true, transform);
     }
-
     private void UpdateAimVisual()
     {
         if (aimLine)
@@ -151,37 +157,9 @@ public class WhiteBall : Ball
         if (powerDisplayer) powerDisplayer.value = 0f;
     }
 
-    protected override void ApplySpecialEffect(ScoreType scoreType, GameObject colliding = null)
+    public override void OnScored()
     {
-        if (scoreType == ScoreType.bounce)
-        {
-            Ball ball = colliding.GetComponent<Ball>();
-
-            if (ball != null)
-            {
-                ball.AddScore(score);
-                ScoreDisplayer.Instance.ShowPopup(score, ScoreType.specialEffect, transform);
-                ResetScore();
-            }
-            else
-            {
-                int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
-                score = newScore;
-                ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
-            }
-        }
-    }
-
-    protected override void OnCollisionEnter2D(Collision2D collision)
-    {
-        ApplySpecialEffect(ScoreType.bounce, collision.gameObject);
-        AudioController.Instance.Play(SoundType.hit, true, transform);
-    }
-
-
-    protected override void Kill()
-    {
-        base.Kill();
+        base.OnScored();
         SpawnManager.Instance.ActivateBall(this);
     }
 

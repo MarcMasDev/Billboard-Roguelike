@@ -10,7 +10,7 @@ public class ScorePopUp : MonoBehaviour
 
     [SerializeField] private Animator mult;
     [SerializeField] private Animator sum;
-    [SerializeField] private Animator specialEffect;
+    [SerializeField] private Animator passScore;
     [SerializeField] private Animator score;
     [SerializeField] private Animator scoreDimished;
     [SerializeField] private Animator coin;
@@ -68,8 +68,8 @@ public class ScorePopUp : MonoBehaviour
             case ScoreType.distance:
             case ScoreType.final:
                 return sum;
-            case ScoreType.specialEffect:
-                return specialEffect;
+            case ScoreType.passScore:
+                return passScore;
             case ScoreType.coin:
                 return coin;
         }

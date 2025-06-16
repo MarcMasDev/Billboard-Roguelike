@@ -16,34 +16,18 @@ public class Ball : MonoBehaviour
     [SerializeField] private GameObject fx;
     public bool diminish = false;
 
-    private uiVisualHandler uiHandler;
-
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        uiHandler = GetComponent<uiVisualHandler>();
 
-        enabled = false;
-    }
-
-    //Activar cuando se hace spawn.
-    public void PutBallToTable()
-    {
         if (!BallManager.Instance.PlayingBalls.Contains(this)) BallManager.Instance.RegisterBall(this);
-
-        uiHandler.disableInteraction = true;
-        ResetBall();
     }
-    private void ResetBall()
+
+    private void OnEnable()
     {
-        uiHandler.Init();
-
-        var col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = true;
-
-        score = stats.initialScore;
         ResetScore();
     }
+
     protected virtual void Update()
     {
         if (stats.distanceToScore > 0)
@@ -51,6 +35,19 @@ public class Ball : MonoBehaviour
             AddScoreOnDist();
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (stats.bounceMultiplier > 1)
+        {
+            MultiplyOnBounce(collision);
+        }
+        else if (stats.passScore)
+        {
+            PassScore(collision.gameObject.GetComponent<Ball>());
+        }
+    }
+
     protected virtual void AddScoreOnDist()
     {
         float distanceMoved = Vector2.Distance(transform.position, lastPosition);
@@ -62,56 +59,48 @@ public class Ball : MonoBehaviour
             score += stats.scoreDist;
             ScoreDisplayer.Instance.ShowPopup(stats.scoreDist, ScoreType.distance, transform);
             distanceBuffer -= stats.distanceToScore;
-            ApplySpecialEffect(ScoreType.distance);
         }
     }
 
-    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void MultiplyOnBounce(Collision2D collision)
     {
-        if (stats.bounceMultiplier > 0 && collision.gameObject.GetComponent<WhiteBall>() == null)
-        {
-            int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
-            score = newScore;
-            ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
-
-            ApplySpecialEffect(ScoreType.bounce, collision.gameObject);
-            AudioController.Instance.Play(SoundType.hit, true, transform);
-        }
-
+        int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
+        score = newScore;
+        ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
+        AudioController.Instance.Play(SoundType.hit, true, transform);
     }
 
-    protected virtual void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void PassScore(Ball ball)
     {
-        if (collision.CompareTag("Hole"))
-        {
-            if (diminish) SetNegativeNumbers();
-            InHole();
-        }
+        if (ball == null) return;
+
+        ball.AddScore(score);
+        ScoreDisplayer.Instance.ShowPopup(score, ScoreType.passScore, transform);
+        ResetScore();
     }
-    private void InHole()
-    {
-        Instantiate(fx, transform.position, Quaternion.identity);
-        Kill();
-    }
-    protected virtual void Kill()
-    {
-        gameObject.SetActive(false);
-    }
+
     public void ResetScore()
     {
         score = stats.initialScore;
         lastPosition = transform.position;
         distanceBuffer = 0;
     }
+    public void OnShoot()
+    {
+        if (stats.multiplyActiveBallsOnShot > 1)
+        {
+            for (int i = 0; i < BallManager.Instance.PlayingBalls.Count; i++)
+            {
+                Ball toMultiply = BallManager.Instance.PlayingBalls[i];
+
+                if (stats != toMultiply) toMultiply.AddScore(stats.multiplyActiveBallsOnShot);
+            }
+        }
+    }
 
     public void AddScore(int add)
     {
         score += add;
-    }
-
-    protected virtual void ApplySpecialEffect(ScoreType scoreType, GameObject colliding = null)
-    {
-
     }
 
     private void SetNegativeNumbers()
@@ -121,6 +110,12 @@ public class Ball : MonoBehaviour
 
     public virtual void OnScored()
     {
+        if (stats.goldPerActiveBall > 1)
+            ScoreManager.Instance.AddCoins(BallManager.Instance.PlayingBalls.Count);
 
+        if (diminish) SetNegativeNumbers();
+
+        Instantiate(fx, transform.position, Quaternion.identity);
+        gameObject.SetActive(false);
     }
 }

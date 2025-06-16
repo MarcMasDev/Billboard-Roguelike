@@ -5,11 +5,11 @@ public enum ScoreType
 {
     bounce,
     distance,
-    specialEffect,
+    passScore,
     coin,
     scored,
     scoredMult,
-    hand,
+    shot,
     final
 }
 
