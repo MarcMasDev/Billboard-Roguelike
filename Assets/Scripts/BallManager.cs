@@ -5,7 +5,8 @@ public class BallManager : MonoBehaviour
 {
     public static BallManager Instance { get; private set; }
 
-    public List<Ball> AllBalls { get; private set; } = new List<Ball>();
+    public List<Ball> BallTemplates { get; private set; } = new List<Ball>(); //todas con las que se van a jugar
+    public List<Ball> PlayingBalls { get; private set; } = new List<Ball>(); //solo las instanciadas
 
     [SerializeField] private Deck defaultDeck; //Inicializar en caso de que no haya una deck asignada.
 
@@ -14,26 +15,29 @@ public class BallManager : MonoBehaviour
         if (Instance != null && Instance != this) Destroy(gameObject);
         Instance = this;
 
+        for (int i = 0; i < defaultDeck.balls.Length; i++)
+        {
+            BallTemplates.Add(defaultDeck.balls[i]);
+        }
+
         if (PlayerInventory.PlayerDeck == null) PlayerInventory.PlayerDeck = defaultDeck;
     }
     public void RegisterBall(Ball ball)
     {
-        if (!AllBalls.Contains(ball))
+        if (!PlayingBalls.Contains(ball))
         {
-            AllBalls.Add(ball);
-            IdentifiersManager.Instance.AddBallUI(ball);
+            PlayingBalls.Add(ball);
         }
     }
-
     public void UnregisterBall(Ball ball)
     {
-        if (AllBalls.Contains(ball))
-            AllBalls.Remove(ball);
+        if (BallTemplates.Contains(ball)) BallTemplates.Remove(ball);
+        if (PlayingBalls.Contains(ball)) PlayingBalls.Remove(ball);
     }
 
-    private bool AllBallsStopped()
+    public bool AllBallsStopped()
     {
-        foreach (Ball ball in AllBalls)
+        foreach (Ball ball in PlayingBalls)
         {
             if (ball.rb.linearVelocity.magnitude > 0.1f)
             {
@@ -44,9 +48,17 @@ public class BallManager : MonoBehaviour
     }
     private void ResetAllScore()
     {
-        foreach (Ball ball in AllBalls)
+        foreach (Ball ball in BallTemplates)
         {
             ball.ResetScore();
+        }
+    }
+
+    public void KillRemainingBalls()
+    {
+        for (int i = 0;i < PlayingBalls.Count; i++)
+        {
+            if (PlayingBalls[i].gameObject.activeSelf) PlayingBalls[i].gameObject.SetActive(false);
         }
     }
 }

@@ -12,9 +12,13 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text scoreToBeatText;
 
+    [SerializeField] private TMP_Text coinsText;
+
     [Header("Events")]
     public UnityEvent onWin;
     public UnityEvent onLose;
+
+    private bool won = false;
 
     private void Awake()
     {
@@ -34,12 +38,24 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int score)
     {
         CurrentScore += score;
+
+        ScoreDisplayer.Instance.ShowPopup(score, ScoreType.final);
         scoreText.text = CurrentScore.ToString("N0");
+
+        won = false;
     }
-    private void SetScores()
+    public void AddCoins(int amount)
     {
+        PlayerInventory.Coins += amount;
+
+        ScoreDisplayer.Instance.ShowPopup(amount, ScoreType.coin);
+        coinsText.text = PlayerInventory.Coins.ToString("C0");
+    }
+    public void SetScores()
+    {
+
         CurrentScore = 0;
-        ScoreToBeat = DifficultySettings.GetScoreToBeat(PlayerInventory.PlayerDeck.difficulty);
+        ScoreToBeat = DifficultySettings.CurrentScoreToBeat;
         scoreToBeatText.text = ScoreToBeat.ToString("N0");
         scoreText.text = CurrentScore.ToString("N0");
     }
@@ -47,21 +63,27 @@ public class ScoreManager : MonoBehaviour
     //Condicions de victoria i derrota
     private void Update()
     {
-        if (CurrentScore >= ScoreToBeat)
+        if (BallManager.Instance.AllBallsStopped())
         {
-            GoToNextRound();
+            if (CurrentScore >= ScoreToBeat && !won)
+            {
+                won = true;
+                GoToNextRound();
+            }
+            else if (PlayerInventory.shots <= 0)
+            {
+                Loose();
+            }
         }
-        else if (PlayerInventory.shots <= 0)
-        {
-            Loose();
-        }
+
+        if (Input.GetKeyDown(KeyCode.A)) { CurrentScore = ScoreToBeat; }
     }
 
     private void GoToNextRound()
     {
         onWin?.Invoke();
+        AddCoins(DifficultySettings.CurrentCoinsToGain);
         PlayerInventory.NextRound();
-        SetScores();
     }
     private void Loose()
     {

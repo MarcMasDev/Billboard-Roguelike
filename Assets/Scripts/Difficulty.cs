@@ -7,4 +7,6 @@ public class Difficulty : ScriptableObject
     public float startValue = 200;
     public float roundsMultiplier = 10;
     public float rackMultiplier = 2.5f;
+
+    public int[] coinsPerRack = new int [3];
 }

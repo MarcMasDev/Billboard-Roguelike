@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c40f3e52589b64941a71b8b9c947a91d, type: 3}
   m_Name: BlackBall
   m_EditorClassIdentifier: 
-  initialScore: -1000
+  ballName: Ball
+  initialScore: -100
   scoreDist: -1
-  bounceMultiplier: 1.5
-  coins: 1
-  distanceToScore: 2
+  bounceMultiplier: 0
+  distanceToScore: 1
+  scoreAmount: 1
   specialEffect: 0
+  explanation: Gives its score when scored.
+  permanent: 1

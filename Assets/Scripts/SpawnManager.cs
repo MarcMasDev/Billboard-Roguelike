@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -19,14 +20,53 @@ public class SpawnManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    public void SpawnDeckBalls()
     {
-        foreach (Ball ball in PlayerInventory.PlayerDeck.balls)
+        for (int i = 0; i < BallManager.Instance.BallTemplates.Count; i++)
         {
-            SpawnBall(ball);
+            if (i < BallManager.Instance.PlayingBalls.Count)
+            {
+                ActivateBall(BallManager.Instance.PlayingBalls[i]);
+            }
+            else
+            {
+                CreateBall(BallManager.Instance.BallTemplates[i]);
+            }
         }
     }
-    public void SpawnBall(Ball ballPrefab)
+
+    public void ActivateBall(Ball ball)
+    {
+        ball.gameObject.SetActive(true);
+        ball.transform.position = GetSpawnPoint();
+
+        ball.PutBallToTable();
+    }
+
+    public void OverrideBall(Ball bToOverride, Ball bToSpawn)
+    {
+        BallManager.Instance.UnregisterBall(bToOverride);
+
+        //Ens guardem la world scale del item en world UI
+        Vector3 worldScale = bToSpawn.transform.localScale;
+
+        bToSpawn.enabled = true;
+        bToSpawn.transform.SetParent(null);
+        bToSpawn.transform.position = bToOverride.transform.position;
+        bToSpawn.transform.localScale = worldScale;
+
+        bToSpawn.PutBallToTable();
+        Destroy(bToOverride.gameObject);
+    }
+
+    private void CreateBall(Ball ballPrefab)
+    {
+        Ball b = Instantiate(ballPrefab, GetSpawnPoint(), Quaternion.identity).GetComponent<Ball>();
+        b.enabled = true;
+        b.PutBallToTable();
+    }
+
+    public Vector2 GetSpawnPoint()
     {
         //Fer el ordre aleatori
         List<Transform> shuffled = Shuffle(new List<Transform>(spawnPoints));
@@ -36,12 +76,12 @@ public class SpawnManager : MonoBehaviour
             Collider2D hit = Physics2D.OverlapCircle(point.position, checkRadius, ballLayer);
             if (hit == null)
             {
-                Instantiate(ballPrefab, point.position, Quaternion.identity);
-                return;
+                return point.position;
             }
         }
 
         Debug.LogWarning("No free spawn point found");
+        return Vector2.zero;
     }
 
     //Randomiza una llista

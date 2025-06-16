@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Audio;
 public enum SoundType
 {
     knock,
@@ -11,7 +12,8 @@ public enum SoundType
     applause,
     hit,
     hitBig,
-    score
+    score,
+    ambience
 }
 
 [System.Serializable]
@@ -25,6 +27,11 @@ public class AudioController : MonoBehaviour
 {
     public static AudioController Instance { get; private set; }
 
+    [Header("Mixer")]
+    public AudioMixer mixer;
+    public AudioMixerGroup sfxGroup;
+    public AudioMixerGroup musicGroup;
+
     [Header("SFXs")]
     [SerializeField] private SoundEntry[] sounds; //multiples audiosources per si volem escoltar 2 sons a la vegada.
 
@@ -34,6 +41,10 @@ public class AudioController : MonoBehaviour
     [SerializeField] private AudioClip[] musicClips;  //Totes les cançons
     [SerializeField] private float applauseDelay = 0.5f;
     [SerializeField] private float delayBeforeNextSong = 1f;
+
+    [Header("Menu LPF")]
+    [SerializeField] private float menuCutoff = 500f;
+    [SerializeField] private string[] scenesWithLPF;
 
     //Un cop ha acabat torni a repetir les cançons amb el mateix ordre, així estic segur que la cançó que escoltarà fa un bon rato que no l'escolta.
     private List<AudioClip> playOrder = new List<AudioClip>(); 
@@ -50,6 +61,12 @@ public class AudioController : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        for (int i = 0; i < sounds.Length; i++) 
+        {
+            sounds[i].source.outputAudioMixerGroup = sfxGroup;
+        }
+        musicSource.outputAudioMixerGroup = musicGroup;
     }
 
     //SFXs
@@ -143,6 +160,69 @@ public class AudioController : MonoBehaviour
 
         int index = Random.Range(0, applauseSources.Count);
         applauseSources[index].source.Play();
+    }
+    public void SetGlobalVolume(float sliderValue)
+    {
+        float volume = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
+        mixer.SetFloat("generalVolume", volume);
+    }
+    public void SetSFXVolume(float sliderValue)
+    {
+        float volume = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
+        mixer.SetFloat("sfxVolume", volume);
+    }
+
+    public void SetMusicVolume(float sliderValue)
+    {
+        float volume = Mathf.Log10(Mathf.Clamp(sliderValue, 0.0001f, 1f)) * 20f;
+        mixer.SetFloat("musicVolume", volume);
+    }
+
+    public float GetGlobalVolume()
+    {
+        mixer.GetFloat("generalVolume", out float vol);
+        return vol;
+    }
+    public float GetSFXVolume()
+    {
+        mixer.GetFloat("musicVolume", out float vol);
+        return vol;
+    }
+    public float GetMusicVolume()
+    {
+        mixer.GetFloat("sfxVolume", out float vol);
+        return vol;
+    }
+
+    public void SetLPF(string sceneName, float duration = 5)
+    {
+        bool enabled = false;
+        for (int i = 0; i < scenesWithLPF.Length; i++)
+        {
+            if (scenesWithLPF[i] == sceneName) 
+            { 
+                enabled = true; 
+                break; 
+            }
+        }
+
+        StartCoroutine(LerpLPF(enabled ? menuCutoff : 22000.00f, duration));
+    }
+
+    private IEnumerator LerpLPF(float targetCutoff, float duration)
+    {
+        mixer.GetFloat("cutoff", out float current);
+        float time = 0f;
+
+        while (time < duration)
+        {
+            float value = Mathf.Lerp(current, targetCutoff, time / duration);
+            mixer.SetFloat("cutoff", value);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        mixer.SetFloat("cutoff", targetCutoff);
     }
 }
 

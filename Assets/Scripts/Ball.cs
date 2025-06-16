@@ -1,4 +1,6 @@
 using UnityEngine;
+
+[RequireComponent (typeof(uiVisualHandler))]
 public class Ball : MonoBehaviour
 {
     [HideInInspector] public Rigidbody2D rb;
@@ -6,7 +8,7 @@ public class Ball : MonoBehaviour
     protected int score = 0;
     public int GetScore() { return score; }
 
-    [SerializeField] protected BallStats stats;
+    public BallStats stats;
 
     private Vector2 lastPosition;
     private float distanceBuffer = 0f;
@@ -14,16 +16,42 @@ public class Ball : MonoBehaviour
     [SerializeField] private GameObject fx;
     public bool diminish = false;
 
-    protected virtual void Awake()
+    private uiVisualHandler uiHandler;
+
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        score = stats.initialScore;
-        lastPosition = rb.position;
-        BallManager.Instance.RegisterBall(this);
-        ResetScore();
+        uiHandler = GetComponent<uiVisualHandler>();
+
+        enabled = false;
     }
 
+    //Activar cuando se hace spawn.
+    public void PutBallToTable()
+    {
+        if (!BallManager.Instance.PlayingBalls.Contains(this)) BallManager.Instance.RegisterBall(this);
+
+        uiHandler.disableInteraction = true;
+        ResetBall();
+    }
+    private void ResetBall()
+    {
+        uiHandler.Init();
+
+        var col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = true;
+
+        score = stats.initialScore;
+        ResetScore();
+    }
     protected virtual void Update()
+    {
+        if (stats.distanceToScore > 0)
+        {
+            AddScoreOnDist();
+        }
+    }
+    protected virtual void AddScoreOnDist()
     {
         float distanceMoved = Vector2.Distance(transform.position, lastPosition);
         distanceBuffer += distanceMoved;
@@ -40,15 +68,16 @@ public class Ball : MonoBehaviour
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        //No multiplicar si rep la colisi� de la bola blanca
-        if (collision.gameObject.GetComponent<WhiteBall>() != null) return;
+        if (stats.bounceMultiplier > 0 && collision.gameObject.GetComponent<WhiteBall>() == null)
+        {
+            int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
+            score = newScore;
+            ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
 
-        int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
-        score = newScore;
-        ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
+            ApplySpecialEffect(ScoreType.bounce, collision.gameObject);
+            AudioController.Instance.Play(SoundType.hit, true, transform);
+        }
 
-        ApplySpecialEffect(ScoreType.bounce, collision.gameObject);
-        AudioController.Instance.Play(SoundType.hit, true, transform);
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
@@ -66,13 +95,13 @@ public class Ball : MonoBehaviour
     }
     protected virtual void Kill()
     {
-        BallManager.Instance.UnregisterBall(this);
         gameObject.SetActive(false);
     }
     public void ResetScore()
     {
         score = stats.initialScore;
-        lastPosition = rb.position;
+        lastPosition = transform.position;
+        distanceBuffer = 0;
     }
 
     public void AddScore(int add)
@@ -88,5 +117,10 @@ public class Ball : MonoBehaviour
     private void SetNegativeNumbers()
     {
         if (score > 0) score *= -1;
+    }
+
+    public virtual void OnScored()
+    {
+
     }
 }

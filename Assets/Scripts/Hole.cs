@@ -12,109 +12,51 @@ public enum ScoreType
     hand,
     final
 }
+
+[RequireComponent(typeof(uiVisualHandler))]
 public class Hole : MonoBehaviour
 {
-    private bool dragging;
-    private Vector3 targetPosition;
-    private Vector3 startingPosition;
-    private Camera mainCamera;
-    private Collider2D col;
-
-    [SerializeField] private float moveSpeed = 10f;
     public HoleStats stats;
+    public string explanation = "";
+
+    private uiVisualHandler holeDisplayer;
 
     private void Awake()
     {
-        col = GetComponent<Collider2D>();
-        mainCamera = Camera.main;
-        startingPosition = transform.position;
-        targetPosition = startingPosition;
-    }
-
-    private void Update()
-    {
-        if (dragging)
-        {
-            UpdateTargetToCursor();
-        }
-        else
-        {
-            ReturnToStartPosition();
-        }
-
-        MoveSmoothly();
-
-        if (Vector2.Distance(transform.position, startingPosition) <= 0.01f && !col.enabled &&!dragging) col.enabled = true;
-    }
-
-    private void UpdateTargetToCursor()
-    {
-        Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0;
-        targetPosition = mousePos;
-    }
-
-    private void ReturnToStartPosition()
-    {
-        targetPosition = startingPosition;
-    }
-
-    private void MoveSmoothly()
-    {
-        transform.position = Vector3.Lerp(transform.position, targetPosition, moveSpeed * Time.deltaTime);
-    }
-
-    private void OnMouseDown()
-    {
-        dragging = true;
-        HoleManager.Instance.GrabbedHole = this;
-        col.enabled = false;
-    }
-
-    private void OnMouseUp()
-    {
-        dragging = false;
-        HoleManager.Instance.GrabbedHole = null;
-
-        Collider2D hit = Physics2D.OverlapPoint(transform.position);
-        if (hit != null && hit.CompareTag("SellZone"))
-        {
-            //El forat está a la zona de vendre, així que ven
-            PlayerInventory.Coins += stats.sellValue;
-            gameObject.SetActive(false);
-        }
+        holeDisplayer = GetComponent<uiVisualHandler>();
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
+        if (holeDisplayer.dragging) return;
+
         Ball ball = collision.GetComponent<Ball>();
 
         if (ball != null)
         {
-            SetScore(ball);
-            SetCoins(ball);
+            for (int i = 0; i < ball.stats.scoreAmount; i++)
+            {
+                SetScore(ball);
+                SetCoins(ball);
+                ball.OnScored();
 
-            ShowMultScoreVisuals();
-            AudioController.Instance.Play(SoundType.score, true, transform);
+                ShowMultScoreVisuals();
+                AudioController.Instance.Play(SoundType.score, true, transform);
+            }
         }
 
     }
     protected virtual void SetScore(Ball ball)
     {
-            CountScore(ball.GetScore() * stats.mult);
+        CountScore(ball.GetScore() * stats.mult);
     }
     protected virtual void SetCoins(Ball ball)
     {
-        CountCoins(ball.diminish ? -stats.coins : stats.coins);
+        ScoreManager.Instance.AddCoins(ball.diminish ? -stats.coins : stats.coins);
     }
     protected virtual void CountScore(int finalScore)
     {
         ScoreManager.Instance.AddScore(finalScore);
-        ScoreDisplayer.Instance.ShowPopup(finalScore, ScoreType.final);
-    }
-    protected virtual void CountCoins(int coins)
-    {
-        ScoreDisplayer.Instance.ShowPopup(coins, ScoreType.coin);
     }
     private void ShowMultScoreVisuals()
     {
