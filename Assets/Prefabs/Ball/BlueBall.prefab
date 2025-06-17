@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1087955840676345756}
   - component: {fileID: 2052233120098514464}
   - component: {fileID: 8472579456060009668}
-  - component: {fileID: 6616587372413670280}
   m_Layer: 7
   m_Name: BlueBall
   m_TagString: Ball
@@ -115,21 +114,6 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 9b4a3be580e939942bed2a80833deb4c, type: 2}
   fx: {fileID: 5229538300533230470, guid: dce3ffce57355df4fb23abccc1cfc18e, type: 3}
   diminish: 0
---- !u!114 &6616587372413670280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3277036340521940746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd3191ca826ee7c479a86f5294e8ea87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dragging: 0
-  disableInteraction: 0
-  moveSpeed: 10
 --- !u!1 &5367898842527423422
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,6 +22,10 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnDeckBalls()
     {
+        PlayerInventory.hideDisplayers = false;
+
+        if (BallManager.Instance.PlayingBalls.Count <= 0) { InitBalls(); return; }
+
         for (int i = 0; i < BallManager.Instance.PlayingBalls.Count; i++)
         {
             if (i < BallManager.Instance.PlayingBalls.Count)
@@ -30,8 +34,15 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                CreateBall(BallManager.Instance.PlayingBalls[i]);
+                CreateBall(BallManager.Instance.PlayingBalls[i].gameObject);
             }
+        }
+    }
+    private void InitBalls()
+    {
+        for (int i = 0; i < BallManager.Instance.defaultDeck.balls.Length; i++)
+        { 
+            CreateBall(BallManager.Instance.defaultDeck.balls[i].ballPrefab);
         }
     }
 
@@ -39,6 +50,7 @@ public class SpawnManager : MonoBehaviour
     {
         ball.gameObject.SetActive(true);
         ball.transform.position = GetSpawnPoint();
+        ball.ui.gameObject.SetActive(true);
     }
 
     public void OverrideBall(Ball bToOverride, Ball bToSpawn)
@@ -56,9 +68,9 @@ public class SpawnManager : MonoBehaviour
         //Destroy(bToOverride.gameObject);
     }
 
-    private void CreateBall(Ball ballPrefab)
+    private GameObject CreateBall(GameObject ballPrefab)
     {
-        Instantiate(ballPrefab, GetSpawnPoint(), Quaternion.identity);
+        return Instantiate(ballPrefab, GetSpawnPoint(), Quaternion.identity);
     }
 
     public Vector2 GetSpawnPoint()

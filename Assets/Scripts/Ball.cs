@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent (typeof(uiVisualHandler))]
 public class Ball : MonoBehaviour
 {
     [HideInInspector] public Rigidbody2D rb;
@@ -15,17 +14,19 @@ public class Ball : MonoBehaviour
 
     [SerializeField] private GameObject fx;
     public bool diminish = false;
-
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-
-        if (!BallManager.Instance.PlayingBalls.Contains(this)) BallManager.Instance.RegisterBall(this);
-    }
+    [HideInInspector] public UiDisplayer ui;
 
     private void OnEnable()
     {
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        BallManager.Instance.RegisterBall(this);
+
         ResetScore();
+        BallManager.OnTurnEnd += HandleTurnEnd;
+    }
+    private void OnDisable()
+    {
+        BallManager.OnTurnEnd -= HandleTurnEnd;
     }
 
     protected virtual void Update()
@@ -56,7 +57,7 @@ public class Ball : MonoBehaviour
 
         while (distanceBuffer >= stats.distanceToScore)
         {
-            score += stats.scoreDist;
+            AddScore(stats.scoreDist);
             ScoreDisplayer.Instance.ShowPopup(stats.scoreDist, ScoreType.distance, transform);
             distanceBuffer -= stats.distanceToScore;
         }
@@ -64,8 +65,8 @@ public class Ball : MonoBehaviour
 
     protected virtual void MultiplyOnBounce(Collision2D collision)
     {
-        int newScore = Mathf.RoundToInt(score * stats.bounceMultiplier);
-        score = newScore;
+        AddScore(Mathf.RoundToInt(score * stats.bounceMultiplier)-score);
+
         ScoreDisplayer.Instance.ShowPopup(stats.bounceMultiplier, ScoreType.bounce, transform);
         AudioController.Instance.Play(SoundType.hit, true, transform);
     }
@@ -84,23 +85,15 @@ public class Ball : MonoBehaviour
         score = stats.initialScore;
         lastPosition = transform.position;
         distanceBuffer = 0;
-    }
-    public void OnShoot()
-    {
-        if (stats.multiplyActiveBallsOnShot > 1)
-        {
-            for (int i = 0; i < BallManager.Instance.PlayingBalls.Count; i++)
-            {
-                Ball toMultiply = BallManager.Instance.PlayingBalls[i];
 
-                if (stats != toMultiply) toMultiply.AddScore(stats.multiplyActiveBallsOnShot);
-            }
-        }
+        ui.UpdatePermanentUI(score.ToString("G"));
     }
+
 
     public void AddScore(int add)
     {
         score += add;
+        ui.UpdatePermanentUI(score.ToString("G"));
     }
 
     private void SetNegativeNumbers()
@@ -117,5 +110,30 @@ public class Ball : MonoBehaviour
 
         Instantiate(fx, transform.position, Quaternion.identity);
         gameObject.SetActive(false);
+    }
+
+    private void HandleTurnEnd()
+    {
+        ApplyOnTurnEffects();
+    }
+
+    protected virtual void ApplyOnTurnEffects()
+    {
+        if (stats.turnEndMultiplier > 1)
+        {
+            ApplyMultiplyingOnTurnEffect();
+        }
+    }
+    private void ApplyMultiplyingOnTurnEffect()
+    {
+        for (int i = 0; i < BallManager.Instance.PlayingBalls.Count; i++)
+        {
+            Ball toMultiply = BallManager.Instance.PlayingBalls[i];
+            if (stats != toMultiply)
+            {
+                ScoreDisplayer.Instance.ShowPopup(stats.turnEndMultiplier, ScoreType.bounce, toMultiply.transform);
+                toMultiply.AddScore(Mathf.RoundToInt(stats.turnEndMultiplier * toMultiply.GetScore()));
+            }
+        }
     }
 }

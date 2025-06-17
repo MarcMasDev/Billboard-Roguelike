@@ -21,13 +21,13 @@ public class HoleInfoUI : MonoBehaviour
     {
         if (targetHole == null) Destroy(gameObject); //Evita errors si es fa spawn sense bola o si una bola es destrueix
 
-        uiController.UpdateInfo(targetHole.transform);
+        uiController.UpdatePosition(targetHole.transform);
     }
     public void Show()
     {
         if (uiController == null) uiController = GetComponent<ScreenToWorldUI>();
 
-        uiController.UpdateInfo(targetHole.transform);
+        uiController.UpdatePosition(targetHole.transform);
         explanationText.text = targetHole.explanation;
         coinsText.text = targetHole.stats.coins.ToString("C0");
         multiplierText.text = targetHole.stats.mult.ToString("G");

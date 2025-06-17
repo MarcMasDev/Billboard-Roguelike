@@ -28,13 +28,13 @@ public class Hole : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (holeDisplayer.dragging) return;
+        //if (holeDisplayer.dragging) return;
 
         Ball ball = collision.GetComponent<Ball>();
 
         if (ball != null)
         {
-            for (int i = 0; i < ball.stats.scoreAmount; i++)
+            for (int i = 0; i < ball.stats.scoringTimes; i++)
             {
                 SetScore(ball);
                 SetCoins(ball);

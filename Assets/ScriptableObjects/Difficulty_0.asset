@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Difficulty_0
   m_EditorClassIdentifier: 
   racksPerRound: 3
-  startValue: 20
+  startValue: 100000000
   roundsMultiplier: 5
   rackMultiplier: 3
   coinsPerRack: 03000000050000000a000000

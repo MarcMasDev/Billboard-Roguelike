@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public class BallManager : MonoBehaviour
@@ -6,17 +7,16 @@ public class BallManager : MonoBehaviour
     public static BallManager Instance { get; private set; }
     public List<Ball> PlayingBalls { get; private set; } = new List<Ball>(); //solo las instanciadas
 
-    [SerializeField] private Deck defaultDeck; //Inicializar en caso de que no haya una deck asignada.
+    public Deck defaultDeck; //Inicializar en caso de que no haya una deck asignada.
+
+
+    public static event Action OnTurnEnd;
+    private bool hasTriggeredTurnEnd = false;
 
     private void Awake()
     {
         if (Instance != null && Instance != this) Destroy(gameObject);
         Instance = this;
-
-        for (int i = 0; i < defaultDeck.balls.Length; i++)
-        {
-            PlayingBalls.Add(defaultDeck.balls[i]);
-        }
 
         if (PlayerInventory.PlayerDeck == null) PlayerInventory.PlayerDeck = defaultDeck;
     }
@@ -25,12 +25,37 @@ public class BallManager : MonoBehaviour
         if (!PlayingBalls.Contains(ball))
         {
             PlayingBalls.Add(ball);
+            ball.ui = IdentifiersManager.Instance.AddItemUI(ball.stats.itemInfo, ball.gameObject);
         }
     }
     public void UnregisterBall(Ball ball)
     {
         if (PlayingBalls.Contains(ball)) PlayingBalls.Remove(ball);
         Destroy(ball);
+    }
+
+    public void KillRemainingBalls()
+    {
+        for (int i = 0;i < PlayingBalls.Count; i++)
+        {
+            if (PlayingBalls[i].gameObject.activeSelf) PlayingBalls[i].gameObject.SetActive(false);
+        }
+    }
+    private void Update()
+    {
+        HandleTurnCalls();
+    }
+    private void HandleTurnCalls()
+    {
+        if (AllBallsStopped())
+        {
+            if (!hasTriggeredTurnEnd)
+            {
+                hasTriggeredTurnEnd = true;
+                OnTurnEnd?.Invoke();
+            }
+        }
+        else hasTriggeredTurnEnd = false;
     }
 
     public bool AllBallsStopped()
@@ -43,21 +68,5 @@ public class BallManager : MonoBehaviour
             }
         }
         return true;
-    }
-    
-    public void ApplyOnShotEffects()
-    {
-        foreach (Ball ball in PlayingBalls)
-        {
-            ball.OnShoot();
-        }
-    }
-
-    public void KillRemainingBalls()
-    {
-        for (int i = 0;i < PlayingBalls.Count; i++)
-        {
-            if (PlayingBalls[i].gameObject.activeSelf) PlayingBalls[i].gameObject.SetActive(false);
-        }
     }
 }

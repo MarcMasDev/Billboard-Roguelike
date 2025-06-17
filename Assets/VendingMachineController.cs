@@ -11,16 +11,18 @@ public class VendingMachineController : MonoBehaviour
 
 
     [SerializeField] private VendingSlot[] slots;
+    [SerializeField] private GameObject holeUIGameobject;
+    [SerializeField] private GameObject ballUIGameobject;
+
+    [Range(0, 1f)][SerializeField] private float holeChance = 0.5f; //Nos permite controlar el drop rate
+
+
     private string numberSelected ="";
     private Animator anim;
-
-    private int maxItems;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
-
-        maxItems = shopData.purchasableItems.Length;
 
         for (int i = 0; i < slots.Length; i++)
         {
@@ -62,18 +64,36 @@ public class VendingMachineController : MonoBehaviour
     }
     private void FillSlot(int index)
     {
-        int randomIndex = GetRandomIndex(maxItems);
-        ShopItem selectedItem = shopData.purchasableItems[randomIndex];
-        slots[index].AddItems(selectedItem);
+        for (int i = 0; i < slots[index].amountOfItems; i++)
+        {
+            int randomIndex = GetRandomIndex(ItemType.ball);
+            slots[index].AddItem(i, shopData.purchasableItems[i], ballUIGameobject);
+
+            if (holeChance < Random.value)
+            {
+                //int randomIndex = GetRandomIndex(ItemType.hole);
+            }
+            else
+            {
+                //int randomIndex = GetRandomIndex(ItemType.ball);
+                //slots[index].AddItem(i, ballUIGameobject);
+            }
+        }
     }
     private int GetCurrentNumber()
     {
         return int.Parse(numberSelected); //Converteix el string a int per no tenir un array de strings
     }
 
-    private int GetRandomIndex(int max)
+    private int GetRandomIndex(ItemType itemT)
     {
-        return Random.Range(0, max);
+        int count = 0;
+
+        for (int i = 0; i < shopData.purchasableItems.Length; i++)
+        {
+            if (shopData.purchasableItems[i].itemType == itemT) count++;
+        }
+        return Random.Range(0, count);
     }
     private void UpdateText(string t)
     {

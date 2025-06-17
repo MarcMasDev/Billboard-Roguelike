@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: DefaultDeck
   m_EditorClassIdentifier: 
   balls:
-  - {fileID: 8472579456060009668, guid: 81f45fb8511608142935843a9bbb940c, type: 3}
-  - {fileID: 8472579456060009668, guid: bbf515c1a0f0732479ac34479b534dfa, type: 3}
-  - {fileID: 8472579456060009668, guid: 571a4ad44bf139347840b659e599777a, type: 3}
-  - {fileID: 8472579456060009668, guid: 94e45036f1dd52445bd415b18a409815, type: 3}
-  - {fileID: 8472579456060009668, guid: bbbf1ab968f4fcd46b464da1c14440b1, type: 3}
-  - {fileID: 8472579456060009668, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
-  - {fileID: 8833314890990927101, guid: c0b6b442bc2206b4a9a51b121966fed7, type: 3}
-  - {fileID: 8472579456060009668, guid: fa969ec0250a3b549b6f72c4acb031c6, type: 3}
+  - {fileID: 11400000, guid: aeaf1a6255f0540439c7e4cc2de8841d, type: 2}
+  - {fileID: 11400000, guid: 9b4a3be580e939942bed2a80833deb4c, type: 2}
+  - {fileID: 11400000, guid: 2dbcd99f237a974439a3ae4b5fc03333, type: 2}
+  - {fileID: 11400000, guid: 9fdf17b2261b4cf44891ba9570cd31a2, type: 2}
+  - {fileID: 11400000, guid: 03ada43dce4d0db40bde686783c0ca2e, type: 2}
+  - {fileID: 11400000, guid: b8bf0af9bddf4484d999a34f12793fc0, type: 2}
+  - {fileID: 11400000, guid: 430e6a06a28ef9942bdb8d461285298e, type: 2}
+  - {fileID: 11400000, guid: 5f0ff76025328264197996113bbd7f54, type: 2}
   difficulty: {fileID: 11400000, guid: 57f1ce1d82bda7f4f996de0246cfb10a, type: 2}

@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2052233120098514464}
   - component: {fileID: 111557999144533266}
   - component: {fileID: 8472579456060009668}
-  - component: {fileID: 8617403845931206013}
   m_Layer: 7
   m_Name: BlackBall
   m_TagString: Ball
@@ -138,21 +137,6 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 5f0ff76025328264197996113bbd7f54, type: 2}
   fx: {fileID: 5229538300533230470, guid: dce3ffce57355df4fb23abccc1cfc18e, type: 3}
   diminish: 1
---- !u!114 &8617403845931206013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3277036340521940746}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd3191ca826ee7c479a86f5294e8ea87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dragging: 0
-  disableInteraction: 0
-  moveSpeed: 10
 --- !u!1 &5367898842527423422
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +211,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1688071603
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 8798859312192978818, guid: a907d43e7f0787f45beb85b173ef245b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

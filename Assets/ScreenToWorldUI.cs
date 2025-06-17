@@ -6,7 +6,7 @@ public class ScreenToWorldUI : MonoBehaviour
     private Camera mainCam;
     [SerializeField] private Vector3 offset = new Vector3(0, 50, 0); //offset en screen space
 
-    public void UpdateInfo(Transform t)
+    public void UpdatePosition(Transform t)
     {
         if (t == null || !t.gameObject.activeSelf)
         {

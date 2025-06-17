@@ -27,7 +27,7 @@ public class WhiteBall : Ball
     protected override void Update()
     {
         base.Update();
-        if (rb.linearVelocity.magnitude < 0.1f) //Només es pot apuntar si la bola está quieta.
+        if (BallManager.Instance.AllBallsStopped()) //Només es pot apuntar si les boles estàn quietes.
         {
             HandleInput();
         }
@@ -132,8 +132,6 @@ public class WhiteBall : Ball
     private void DecreaseShot()
     {
         PlayerInventory.shots -= 1;
-
-        BallManager.Instance.ApplyOnShotEffects();
         ScoreDisplayer.Instance.ShowPopup(-1, ScoreType.shot);
         AudioController.Instance.Play(SoundType.hitBig, true, transform);
     }
@@ -155,6 +153,8 @@ public class WhiteBall : Ball
     {
         LineVisuals(rb.position, rb.position); //amaga l'apuntat
         if (powerDisplayer) powerDisplayer.value = 0f;
+
+        PlayerInventory.hideDisplayers = false; //desbloca els hover info panels
     }
 
     public override void OnScored()
@@ -180,5 +180,7 @@ public class WhiteBall : Ball
                 fillImage.material = gradientMaterial;
             }
         }
+
+        PlayerInventory.hideDisplayers = true; //bloca els hover info panels
     }
 }

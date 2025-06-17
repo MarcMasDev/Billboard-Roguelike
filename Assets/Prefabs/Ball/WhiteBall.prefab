@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1688071603
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -7744884550372591852, guid: a907d43e7f0787f45beb85b173ef245b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -100,7 +100,6 @@ GameObject:
   - component: {fileID: 3888299227001355048}
   - component: {fileID: 8530546673300309093}
   - component: {fileID: 3214198541145804811}
-  - component: {fileID: 3086793873296659874}
   m_Layer: 7
   m_Name: WhiteBall
   m_TagString: Ball
@@ -266,18 +265,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &3086793873296659874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6832545283459421918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd3191ca826ee7c479a86f5294e8ea87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dragging: 0
-  disableInteraction: 0
-  moveSpeed: 10

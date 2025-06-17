@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c40f3e52589b64941a71b8b9c947a91d, type: 3}
+  m_Name: WhiteBall
+  m_EditorClassIdentifier: 
+  ballPrefab: {fileID: 6832545283459421918, guid: c0b6b442bc2206b4a9a51b121966fed7, type: 3}
+  itemInfo:
+    itemType: 1
+    showPermanentUI: 1
+    itemName: Dry Martini
+    description: "Always the first to hit the table. {pass} its value to others when
+      colliding ({permanent}).\r\nStarting Score: {score}\r"
+    icon: {fileID: -7744884550372591852, guid: a907d43e7f0787f45beb85b173ef245b, type: 3}
+    itemPrefab: {fileID: 6832545283459421918, guid: c0b6b442bc2206b4a9a51b121966fed7, type: 3}
+    buyPrice: 20
+  initialScore: 5
+  scoreDist: 1
+  bounceMultiplier: 1
+  distanceToScore: 0
+  scoringTimes: 1
+  goldPerActiveBall: 0
+  turnEndMultiplier: 1
+  passScore: 1
+  permanent: 1

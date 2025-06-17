@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c40f3e52589b64941a71b8b9c947a91d, type: 3}
+  m_Name: BlueBall
+  m_EditorClassIdentifier: 
+  ballPrefab: {fileID: 3277036340521940746, guid: bbf515c1a0f0732479ac34479b534dfa, type: 3}
+  itemInfo:
+    itemType: 1
+    showPermanentUI: 1
+    itemName: Blue Lagoon
+    description: 'Every sip tastes better (+{dist}).
+
+      Starting Score: {score}
+
+'
+    icon: {fileID: 6096999801336106887, guid: a907d43e7f0787f45beb85b173ef245b, type: 3}
+    itemPrefab: {fileID: 3277036340521940746, guid: bbf515c1a0f0732479ac34479b534dfa, type: 3}
+    buyPrice: 3
+  initialScore: 0
+  scoreDist: 1
+  bounceMultiplier: 0
+  distanceToScore: 1
+  scoringTimes: 1
+  goldPerActiveBall: 0
+  turnEndMultiplier: 1
+  passScore: 0
+  permanent: 0

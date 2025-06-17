@@ -1,29 +1,25 @@
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class VendingSlot : MonoBehaviour
 {
-    private ShopItem[] itemSlots = new ShopItem[3];
-    private GameObject[] spawnedItems = new GameObject[3];
+    private GameObject[] slotItems;
+    [SerializeField] private Transform shopItemsParent;
 
-    [Range(0, 1f)][SerializeField] private float holeChance = 0.5f; //Nos permite hacer que cada shop slot tenga un custom drop rate
+    public int amountOfItems = 3;
 
-    public void AddItems(ShopItem item)
+    private void Awake()
     {
-        for (int i = 0; i < itemSlots.Length; i++)
-        {
-            itemSlots[i] = item;
+        slotItems = new GameObject[amountOfItems];
+    }
 
-            if (holeChance < Random.value)
-            {
-                spawnedItems[i] = Instantiate(item.hole.gameObject, transform);
-            }
-            else
-            {
-                spawnedItems[i] = Instantiate(item.ball.gameObject, transform);
-            }
-        }
-
+    public void AddItem(int index, ItemData item, GameObject uiToSpawn)
+    {
+        slotItems[index] = Instantiate(uiToSpawn, shopItemsParent);
+        
+        //Init item
+        slotItems[index].GetComponent<Image>().sprite = item.icon;
+        slotItems[index].GetComponent<UiDisplayer>().Init(item, uiToSpawn);
     }
 
     public void BuySlot()
@@ -33,9 +29,9 @@ public class VendingSlot : MonoBehaviour
 
     public void ResetItems()
     {
-        for (int i = 0; i < spawnedItems.Length; i++) 
+        for (int i = 0; i < slotItems.Length; i++) 
         {
-            if (spawnedItems[i]) Destroy(spawnedItems[i]);
+            if (slotItems[i]) Destroy(slotItems[i]);
         }
     }
 

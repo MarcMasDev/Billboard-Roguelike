@@ -4,8 +4,7 @@ using UnityEngine;
 public class IdentifiersManager : MonoBehaviour
 {
     [SerializeField] private RectTransform uiParent;
-    [SerializeField] private GameObject ballUI;
-    [SerializeField] private GameObject holeUI;
+    [SerializeField] private GameObject uiPrefab;
 
     public static IdentifiersManager Instance { get; private set; }
 
@@ -15,28 +14,11 @@ public class IdentifiersManager : MonoBehaviour
         Instance = this;
     }
 
-    public BallIdentifierUI AddBallUI(Ball b)
+    public UiDisplayer AddItemUI(ItemData data, GameObject toFollow)
     {
-        GameObject uiInstance = Instantiate(ballUI, uiParent);
-        BallIdentifierUI ui = uiInstance.GetComponent<BallIdentifierUI>();
-        CenterRect(uiInstance.GetComponent<RectTransform>());
-        ui.Initialize(b);
+        GameObject uiInstance = Instantiate(uiPrefab, uiParent);
+        UiDisplayer ui = uiInstance.GetComponent<UiDisplayer>();
+        ui.Init(data, toFollow);
         return ui;
-    }
-
-    public HoleInfoUI AddHoleUI(Hole hole)
-    {
-        GameObject uiInstance = Instantiate(holeUI, uiParent);
-        HoleInfoUI ui = uiInstance.GetComponent<HoleInfoUI>();
-        CenterRect(uiInstance.GetComponent<RectTransform>());
-        ui.Initialize(hole);
-        return ui;
-    }
-    
-    private void CenterRect(RectTransform rt)
-    {
-        rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.anchorMin = new Vector2(0.5f, 0.5f);
-        rt.anchorMax = new Vector2(0.5f, 0.5f);
     }
 }
