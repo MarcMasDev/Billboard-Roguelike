@@ -13,18 +13,11 @@ public enum ScoreType
     final
 }
 
-[RequireComponent(typeof(uiVisualHandler))]
 public class Hole : MonoBehaviour
 {
     public HoleStats stats;
     public string explanation = "";
 
-    private uiVisualHandler holeDisplayer;
-
-    private void Awake()
-    {
-        holeDisplayer = GetComponent<uiVisualHandler>();
-    }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
