@@ -19,11 +19,14 @@ public struct ItemData
     public GameObject itemPrefab;
 
     public int buyPrice;
+    public int sellAmount;
 }
 
 
 [CreateAssetMenu(fileName = "ShopData", menuName = "Scriptable Objects/ShopData")]
 public class ShopData : ScriptableObject
 {
-    public ItemData[] purchasableItems;
+
+    public HoleStats[] purchasableHoles;
+    public BallStats[] purchasableBalls;
 }

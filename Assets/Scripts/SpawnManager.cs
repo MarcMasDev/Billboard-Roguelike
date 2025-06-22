@@ -1,6 +1,8 @@
+using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -53,22 +55,16 @@ public class SpawnManager : MonoBehaviour
         ball.ui.gameObject.SetActive(true);
     }
 
-    public void OverrideBall(Ball bToOverride, Ball bToSpawn)
+    public void OverrideBall(GameObject target, ItemData toSpawn)
     {
-        //BallManager.Instance.UnregisterBall(bToOverride);
-
-        ////Ens guardem la world scale del item en world UI
-        //Vector3 worldScale = bToSpawn.transform.localScale;
-
-        //bToSpawn.enabled = true;
-        //bToSpawn.transform.SetParent(null);
-        //bToSpawn.transform.position = bToOverride.transform.position;
-        //bToSpawn.transform.localScale = worldScale;
-
-        //Destroy(bToOverride.gameObject);
+        BallManager.Instance.UnregisterBall(target.GetComponent<Ball>());
+        IdentifiersManager.Instance.RemoveItemUI(target);
+        Destroy(target);
+        CreateBall(toSpawn.itemPrefab);
+        Destroy(gameObject);
     }
 
-    private GameObject CreateBall(GameObject ballPrefab)
+    public GameObject CreateBall(GameObject ballPrefab)
     {
         return Instantiate(ballPrefab, GetSpawnPoint(), Quaternion.identity);
     }

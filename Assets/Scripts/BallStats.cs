@@ -15,7 +15,7 @@ public class BallStats : ScriptableObject
     public float bounceMultiplier = 1;         //{bounce}        → #b97a60
     public float distanceToScore = 0.01f;      //{distance}      → #b97a60
     public int scoringTimes = 1;               //{scoringTimes}  → #b97a60
-    public int goldPerActiveBall = 0;          //{gold}          → #DAD19B
+    public int goldPerActiveBall = 0;          //{gold}          → #b97a60
     public float turnEndMultiplier = 1;        //{turnEnd}       → #b97a60
     public bool passScore = false;             //{pass}          → if true → #645355
     public bool permanent = false;             //{permanent}     → if true → #645355
@@ -52,7 +52,7 @@ public class BallStats : ScriptableObject
 
         if (desc.Contains("{gold}"))
         {
-            desc = ReplaceString(desc, "{gold}", FormatInt(goldPerActiveBall, "#DAD19B"));
+            desc = ReplaceString(desc, "{gold}", FormatInt(goldPerActiveBall, "#b97a60"));
         }
 
         if (desc.Contains("{turnEnd}"))

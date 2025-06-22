@@ -7,6 +7,9 @@ public class HoleStats : ScriptableObject
     public GameObject holePrefab;
     public GameObject holeUIPrefab;
 
+    [Header("Shop/UI Info")]
+    public ItemData itemInfo;
+
     [Header("Shop")]
     public int sellValue = 0;
 

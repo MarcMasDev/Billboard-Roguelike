@@ -137,6 +137,7 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 5f0ff76025328264197996113bbd7f54, type: 2}
   fx: {fileID: 5229538300533230470, guid: dce3ffce57355df4fb23abccc1cfc18e, type: 3}
   diminish: 1
+  ui: {fileID: 0}
 --- !u!1 &5367898842527423422
 GameObject:
   m_ObjectHideFlags: 0

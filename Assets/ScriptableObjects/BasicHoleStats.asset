@@ -12,6 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b88101d74b353a4d9c85e4f800a7c88, type: 3}
   m_Name: BasicHoleStats
   m_EditorClassIdentifier: 
+  holePrefab: {fileID: 0}
+  holeUIPrefab: {fileID: 0}
+  itemInfo:
+    itemType: 0
+    showPermanentUI: 0
+    itemName: 
+    description: 
+    icon: {fileID: 0}
+    itemPrefab: {fileID: 0}
+    buyPrice: 0
+    sellAmount: 0
   sellValue: 2
-  mult: 2
+  mult: 1
   coins: 1

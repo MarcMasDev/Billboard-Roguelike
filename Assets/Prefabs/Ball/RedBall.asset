@@ -19,13 +19,13 @@ MonoBehaviour:
     itemName: Bloody Mary
     description: 'Every bounce kicks harder (x{bounce}).
 
-      Starting Score:
-      {score}
+      Starting Score: {score}
 
 '
     icon: {fileID: 4764365881608372377, guid: a907d43e7f0787f45beb85b173ef245b, type: 3}
     itemPrefab: {fileID: 3277036340521940746, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
-    buyPrice: 0
+    buyPrice: 4
+    sellAmount: 2
   initialScore: 2
   scoreDist: 50
   bounceMultiplier: 2

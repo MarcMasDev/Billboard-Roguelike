@@ -14,10 +14,20 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     [Header("Permanent UI")]
     [SerializeField] private CanvasGroup permanentUI;
     [SerializeField] private TMP_Text permanentText;
+    [SerializeField] private bool usePermanent = true;
     private ScreenToWorldUI uiController;
 
     private bool isPointerOverUI;
-
+    [SerializeField] private bool setOnTop = true;
+    public bool draggable = false;
+    public GameObject GetTarget()
+    {
+        return target;
+    }
+    public ItemData GetItemData()
+    {
+        return itemData;
+    }
     public void Init(ItemData data, GameObject target = null)
     {
         uiController = GetComponent<ScreenToWorldUI>();
@@ -28,7 +38,7 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
         SetInfoPanel(false);
 
-        if (itemData.showPermanentUI) permanentUI.alpha = 1;
+        if (itemData.showPermanentUI && usePermanent) permanentUI.alpha = 1;
         else permanentUI.alpha = 0;
 
         UpdateUIInfo();
@@ -38,7 +48,6 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (uiController != null && target) uiController.UpdatePosition(target.transform);
 
         bool isHoveringWorldObject = IsMouseOverTarget();
-        print("Ball " + itemData.itemName + " is hovered = " + isHoveringWorldObject);
 
         //Comprovem si hauria d'ensenyar tant per UI com per World. Si qualsevol de les 2 es compleix i
         //El jugador no té cap impediment (ej. esta fent drag) ensenyem la UI
@@ -79,7 +88,7 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             UpdateUIInfo();
             infoPanel.alpha = 1;
-            transform.SetAsLastSibling(); //Fes que sigui el displayer que es veu per sobre de tots
+            if (setOnTop) transform.SetAsLastSibling(); //Fes que sigui el displayer que es veu per sobre de tots
         }
         else infoPanel.alpha = 0;
     }
@@ -107,4 +116,35 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         isPointerOverUI = false;
     }
+    public void OnDrag()
+    {
+        Sell.Instance.UpdateText(itemData.sellAmount);
+    }
+    public void OnDroppedOnUI(GameObject target)
+    {
+        switch (target.transform.tag)
+        {
+            case "InventorySlot":
+                ItemInventory.Instance.AddItem(gameObject);
+                break;
+            case "SellZone":
+                Sell.Instance.SellItem(gameObject, itemData.sellAmount);
+                break;
+        }
+    }
+
+    public void OnDroppedOnWorld(GameObject target)
+    {
+        switch (target.transform.tag)
+        {
+            case "Ball":
+                SpawnManager.Instance.OverrideBall(target, itemData);
+                Destroy(gameObject);
+                break;
+            case "SellZone":
+                Sell.Instance.SellItem(gameObject, itemData.sellAmount);
+                break;
+        }
+    }
+
 }

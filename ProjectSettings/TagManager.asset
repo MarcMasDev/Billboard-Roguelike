@@ -7,6 +7,8 @@ TagManager:
   - Hole
   - Ball
   - SellZone
+  - InventorySlot
+  - Dragging
   layers:
   - Default
   - TransparentFX

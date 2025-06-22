@@ -13,6 +13,8 @@ public enum SoundType
     hit,
     hitBig,
     score,
+    error,
+    purchase,
     ambience
 }
 

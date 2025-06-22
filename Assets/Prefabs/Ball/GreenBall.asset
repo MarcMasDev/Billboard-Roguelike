@@ -25,6 +25,7 @@ MonoBehaviour:
     icon: {fileID: 4194090866862378736, guid: a907d43e7f0787f45beb85b173ef245b, type: 3}
     itemPrefab: {fileID: 3277036340521940746, guid: 81f45fb8511608142935843a9bbb940c, type: 3}
     buyPrice: 2
+    sellAmount: 1
   initialScore: 10
   scoreDist: 0
   bounceMultiplier: 0

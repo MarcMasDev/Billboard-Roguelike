@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b65195a7a7bf9bf48ac2aac567a4643f, type: 3}
   m_Name: ShopData
   m_EditorClassIdentifier: 
-  purchasableHoles:
-  - {fileID: 6984824881356307620, guid: 23f5aba0d098cc44690fa803114e2537, type: 3}
-  - {fileID: 701383088208323922, guid: 0c5b616647a20a944a39f18575e82234, type: 3}
+  purchasableHoles: []
   purchasableBalls:
-  - {fileID: 8472579456060009668, guid: f76b1af988f39044dbe2d9a136d88ad8, type: 3}
-  - {fileID: 8833314890990927101, guid: c0b6b442bc2206b4a9a51b121966fed7, type: 3}
-  - {fileID: 8472579456060009668, guid: fa969ec0250a3b549b6f72c4acb031c6, type: 3}
+  - {fileID: 11400000, guid: 5f0ff76025328264197996113bbd7f54, type: 2}
+  - {fileID: 11400000, guid: 9b4a3be580e939942bed2a80833deb4c, type: 2}
+  - {fileID: 11400000, guid: 03ada43dce4d0db40bde686783c0ca2e, type: 2}
+  - {fileID: 11400000, guid: aeaf1a6255f0540439c7e4cc2de8841d, type: 2}
+  - {fileID: 11400000, guid: b8bf0af9bddf4484d999a34f12793fc0, type: 2}
+  - {fileID: 11400000, guid: 9fdf17b2261b4cf44891ba9570cd31a2, type: 2}
+  - {fileID: 11400000, guid: 2dbcd99f237a974439a3ae4b5fc03333, type: 2}
+  - {fileID: 11400000, guid: 430e6a06a28ef9942bdb8d461285298e, type: 2}
