@@ -59,15 +59,22 @@ public class VendingSlot : MonoBehaviour
         //}
     }
 
-    public void ResetItems()
+    public void ClearItems(bool destroy = false)
     {
         for (int i = 0; i < slotItems.Length; i++)
         {
             if (slotItems[i])
             {
+                if(destroy)
+                    Destroy(slotItems[i]);
                 slotItems[i] = null;
             }
         }
+    }
+
+    public void ResetItems()
+    {
+        ClearItems(true);
         ResetPrice();
     }
 

@@ -8,7 +8,7 @@ public class ScoreManager : MonoBehaviour
 
     public int CurrentScore { get; private set; }
     private int ScoreToBeat = 0;
-
+    
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text scoreToBeatText;
 
@@ -53,7 +53,6 @@ public class ScoreManager : MonoBehaviour
     }
     public void SetScores()
     {
-
         CurrentScore = 0;
         ScoreToBeat = DifficultySettings.CurrentScoreToBeat;
         scoreToBeatText.text = ScoreToBeat.ToString("N0");

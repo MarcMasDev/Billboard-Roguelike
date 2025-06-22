@@ -48,9 +48,7 @@ public class VendingMachineController : MonoBehaviour
         
         if(numberSelected.Length >= 2) 
         {
-            anim.SetTrigger("Error");
-            AudioController.Instance.Play(SoundType.error);
-            UpdateText("--");
+            TriggerError();
         }
         else
             UpdateText(numberSelected + index.ToString());
@@ -67,6 +65,8 @@ public class VendingMachineController : MonoBehaviour
             UiDisplayer ui = toAdd.GetComponent<UiDisplayer>();
             if (ui) ui.draggable = true;
         }
+
+        slots[num].ClearItems(false);
     }
     public void EndItemsBuy()
     {            
@@ -84,7 +84,7 @@ public class VendingMachineController : MonoBehaviour
         {
             isBuying = true;
 
-            //Comença la animació
+            //Comenï¿½a la animaciï¿½
             slots[num].BuySlot();
         }
     }
@@ -132,6 +132,7 @@ public class VendingMachineController : MonoBehaviour
     private void TriggerError()
     {
         anim.SetTrigger("Error");
-        numberSelected = "--";
+        UpdateText("--");
+        AudioController.Instance.Play(SoundType.error);
     }
 }

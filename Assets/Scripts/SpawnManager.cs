@@ -55,13 +55,18 @@ public class SpawnManager : MonoBehaviour
         ball.ui.gameObject.SetActive(true);
     }
 
-    public void OverrideBall(GameObject target, ItemData toSpawn)
+    public bool OverrideBall(GameObject target, ItemData toSpawn)
     {
-        BallManager.Instance.UnregisterBall(target.GetComponent<Ball>());
+        var ball = target.GetComponent<Ball>();
+        if (ball.stats.permanent)
+            return false;
+        
+        BallManager.Instance.UnregisterBall(ball);
         IdentifiersManager.Instance.RemoveItemUI(target);
         Destroy(target);
         CreateBall(toSpawn.itemPrefab);
-        Destroy(gameObject);
+
+        return true;
     }
 
     public GameObject CreateBall(GameObject ballPrefab)

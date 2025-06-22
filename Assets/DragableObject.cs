@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,6 +13,8 @@ public class DragableObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private Vector2 originalPosition;
     private Transform originalParent;
     private bool isDragging;
+
+    public event Action<DragableObject> DragStarted; 
 
     private void Start()
     {
@@ -35,6 +38,8 @@ public class DragableObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         //Mou a dalt de tot mentres fa dragging
         transform.SetParent(canvas.transform);
         transform.SetAsLastSibling();
+        
+        DragStarted?.Invoke(this);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -66,21 +71,19 @@ public class DragableObject : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         Collider2D worldHit = Physics2D.OverlapPoint(mouseWorldPos);
         if (worldHit != null)
         {
-            displayer.OnDroppedOnWorld(worldHit.gameObject);
-            return;
+            if(displayer.OnDroppedOnWorld(worldHit.gameObject))
+                return;
         }
 
         //Mira si s'ha deixat en la ui
         GameObject uiTarget = eventData.pointerCurrentRaycast.gameObject;
         if (uiTarget != null && uiTarget != gameObject)
         {
-            displayer.OnDroppedOnUI(uiTarget);
-            return;
+            if(displayer.OnDroppedOnUI(this, uiTarget))
+                return;
         }
-
-
-
-        //Si no, torna a la posició inicial
+        
+        //Si no, torna a la posiciï¿½ inicial
         rectTransform.anchoredPosition = originalPosition;
         transform.SetParent(originalParent);
     }

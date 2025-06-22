@@ -5,7 +5,7 @@ public class ItemInventory : MonoBehaviour
 {
     public static ItemInventory Instance { get; private set; }
 
-    private List<GameObject> items = new List<GameObject>();
+    private List<DragableObject> items = new(4);
     [SerializeField] private int size = 5;
     [SerializeField] private Transform parent;
 
@@ -20,10 +20,23 @@ public class ItemInventory : MonoBehaviour
         Instance = this;
     }
 
-    public void AddItem(GameObject g)
+    public void AddItem(DragableObject dragable)
     {
         if (items.Count > size) return;
-        items.Add(g);
-        g.transform.SetParent(parent);
+        items.Add(dragable);
+        dragable.DragStarted += DragableOnDragStarted;
+        dragable.transform.SetParent(parent);
+        dragable.transform.localPosition = Vector3.zero;
+    }
+
+    private void DragableOnDragStarted(DragableObject dragable)
+    {
+        RemoveItem(dragable);
+    }
+
+    private void RemoveItem(DragableObject dragable)
+    {
+        items.Remove(dragable);
+        dragable.DragStarted -= DragableOnDragStarted;
     }
 }

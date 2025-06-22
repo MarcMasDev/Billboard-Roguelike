@@ -16,4 +16,4 @@ MonoBehaviour:
   startValue: 20
   roundsMultiplier: 4
   rackMultiplier: 2
-  coinsPerRack: 03000000050000000a000000
+  coinsPerRack: 0a0000000f0000001e000000

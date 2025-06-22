@@ -111,7 +111,7 @@ public class BallStats : ScriptableObject
 
     private string FormatBool(string label, string backgroundHex, string textHex)
     {
-        return $"<mark={backgroundHex}><color={textHex}><b>{label}</b></color></mark>";
+        return $"<b><color={textHex}>{label}</color></b>";
     }
 
     private string ReplaceString(string desc, string toReplace, string formattedText)

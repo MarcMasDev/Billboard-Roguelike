@@ -7,12 +7,14 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private GameObject target;
     private ItemData itemData;
 
-    [Header("Generic Info Panel")]
-    [SerializeField] private CanvasGroup infoPanel;
+    [Header("Generic Info Panel")] [SerializeField]
+    private CanvasGroup infoPanel;
+
     [SerializeField] private TMP_Text itemName, itemDesc;
 
-    [Header("Permanent UI")]
-    [SerializeField] private CanvasGroup permanentUI;
+    [Header("Permanent UI")] [SerializeField]
+    private CanvasGroup permanentUI;
+
     [SerializeField] private TMP_Text permanentText;
     [SerializeField] private bool usePermanent = true;
     private ScreenToWorldUI uiController;
@@ -20,14 +22,17 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private bool isPointerOverUI;
     [SerializeField] private bool setOnTop = true;
     public bool draggable = false;
+
     public GameObject GetTarget()
     {
         return target;
     }
+
     public ItemData GetItemData()
     {
         return itemData;
     }
+
     public void Init(ItemData data, GameObject target = null)
     {
         uiController = GetComponent<ScreenToWorldUI>();
@@ -43,6 +48,7 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
         UpdateUIInfo();
     }
+
     private void Update()
     {
         if (uiController != null && target) uiController.UpdatePosition(target.transform);
@@ -50,7 +56,7 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         bool isHoveringWorldObject = IsMouseOverTarget();
 
         //Comprovem si hauria d'ensenyar tant per UI com per World. Si qualsevol de les 2 es compleix i
-        //El jugador no té cap impediment (ej. esta fent drag) ensenyem la UI
+        //El jugador no tï¿½ cap impediment (ej. esta fent drag) ensenyem la UI
         bool shouldShow = (isPointerOverUI || isHoveringWorldObject) && !PlayerInventory.hideDisplayers;
         SetInfoPanel(shouldShow);
 
@@ -70,6 +76,7 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 {
                     itemDesc.text = itemData.itemPrefab.GetComponent<Ball>().stats.GetFormattedDescription();
                 }
+
                 break;
             default:
                 itemDesc.text = itemData.description;
@@ -116,35 +123,43 @@ public class UiDisplayer : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         isPointerOverUI = false;
     }
+
     public void OnDrag()
     {
         Sell.Instance.UpdateText(itemData.sellAmount);
     }
-    public void OnDroppedOnUI(GameObject target)
+
+    public bool OnDroppedOnUI(DragableObject dragable, GameObject target)
     {
         switch (target.transform.tag)
         {
             case "InventorySlot":
-                ItemInventory.Instance.AddItem(gameObject);
-                break;
+                ItemInventory.Instance.AddItem(dragable);
+                return true;
             case "SellZone":
                 Sell.Instance.SellItem(gameObject, itemData.sellAmount);
-                break;
+                return true;
         }
+
+        return false;
     }
 
-    public void OnDroppedOnWorld(GameObject target)
+    public bool OnDroppedOnWorld(GameObject target)
     {
         switch (target.transform.tag)
         {
             case "Ball":
-                SpawnManager.Instance.OverrideBall(target, itemData);
+                if (!SpawnManager.Instance.OverrideBall(target, itemData))
+                {
+                    return false;
+                }
                 Destroy(gameObject);
-                break;
+                return true;
             case "SellZone":
                 Sell.Instance.SellItem(gameObject, itemData.sellAmount);
-                break;
+                return true;
         }
-    }
 
+        return false;
+    }
 }
